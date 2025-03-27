@@ -23,6 +23,7 @@ public class App {
         try {// resources\logging.properties
             LogManager.getLogManager().readConfiguration(new FileInputStream("resources/logging.properties"));
         } catch (SecurityException | IOException e1) {
+            logger.log(Level.WARNING, "Your Message.", e1)
             e1.printStackTrace();
         }
     }
@@ -38,15 +39,15 @@ public class App {
 
         wordleDatabaseConnection.createNewDatabase("words.db");
         if (wordleDatabaseConnection.checkIfConnectionDefined()) {
-            System.out.println("Wordle created and connected.");
+            logger.log(Level.INFO,"Wordle created and connected.");
         } else {
-            System.out.println("Not able to connect. Sorry!");
+            logger.log(Level.INFO,"Not able to connect. Sorry!");
             return;
         }
         if (wordleDatabaseConnection.createWordleTables()) {
-            System.out.println("Wordle structures in place.");
+            logger.log(Level.INFO,"Wordle structures in place.");
         } else {
-            System.out.println("Not able to launch. Sorry!");
+            logger.log(Level.INFO, "Not able to launch. Sorry!");
             return;
         }
 
@@ -57,15 +58,19 @@ public class App {
             int i = 1;
             while ((line = br.readLine()) != null) {
                 if(line.matches("^[a-z]{4}$")){
-                    System.out.println(line);
+                    logger.log(Level.FINE, line);
                     wordleDatabaseConnection.addValidWord(i, line);
                     i++;
                 }
+                else{
+                    logger.log(Level.SEVERE, "invalid word for data.txt");
+                }
+
             }
 
         } catch (IOException e) {
-            System.out.println("Not able to load . Sorry!");
-            System.out.println(e.getMessage());
+            logger.log(Level.INFO,"Not able to load . Sorry!");
+            logger.log(Level.WARNING, "Your message",e.getMessage());
             return;
         }
 
@@ -82,9 +87,11 @@ public class App {
                     if(wordleDatabaseConnection.isValidWord(guess)){
                     System.out.println("Success! It is in the the list.\n");
                     }else{
-                    System.out.println("Sorry. This word is NOT in the the list.\n");
+                        logger.log(Level.WARNING, "invalid guess attemtpt");
+                        System.out.println("Sorry. This word is NOT in the the list.\n");
                     }
                 }else{
+                    logger.log(Level.WARNING, "invalid guess attemtpt");
                     System.out.println("Sorry. This word is NOT in the the list.\n");
                 }
                 
