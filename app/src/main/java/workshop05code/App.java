@@ -23,7 +23,7 @@ public class App {
         try {// resources\logging.properties
             LogManager.getLogManager().readConfiguration(new FileInputStream("resources/logging.properties"));
         } catch (SecurityException | IOException e1) {
-            logger.log(Level.WARNING, "Your Message.", e1)
+
             e1.printStackTrace();
         }
     }
